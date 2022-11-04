@@ -1,0 +1,30 @@
+/* https://github.com/catppuccin/catppuccin - frappe */
+
+static const char filler[]              = "#d9e0ee";
+static const char col_white[]           = "#edeff1";
+// static const char col_rosewater[]    = "#f2d5cf";
+// static const char col_flamingo[]     = "#eebebe";
+// static const char col_pink[]         = "#f4b8e4";
+// static const char col_mauve[]        = "#ca9ee6";
+static const char col_red[]             = "#e78284";
+// static const char col_maroon[]       = "#ea999c";
+static const char col_peach[]           = "#ef9f76";
+static const char col_yellow[]          = "#e5c890";
+static const char col_green[]           = "#a6d189";
+static const char col_teal[]            = "#81c8be";
+// static const char col_sky[]          = "#99d1db";
+// static const char col_sapphire[]     = "#85c1dc";
+// static const char col_blue[]         = "#8caaee";
+static const char col_lavender[]        = "#babbf1";
+// static const char col_text[]       	= "#c6d0f5";
+// static const char col_subtext1[]     = "#b5bfe2";
+// static const char col_subtext0[]     = "#a5adce";
+// static const char col_overlay2[]     = "#949cbb";
+// static const char col_overlay1[]     = "#838ba7";
+// static const char col_overlay0[]     = "#737994";
+// static const char col_surface2[]     = "#626880";
+// static const char col_surface1[]     = "#51576d";
+static const char col_surface0[]     	= "#414559";
+// static const char col_base[]         = "#303446";
+// static const char col_mantle[]       = "#292c3c";
+static const char col_crust[]           = "#232634";
