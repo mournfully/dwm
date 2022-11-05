@@ -7,8 +7,13 @@ static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
 static const char *fonts[]          = { "JetBrainsMono Nerd Font:style=regular:size=11", "Material Design Icons Desktop:style=regular:size=14" };
 static const char dmenufont[]       = { "JetBrainsMono Nerd Font:style=regular:size=11" };
-#include "configs/color-theme.h"
-#include "configs/color-scheme.h"
+
+#include "configs/catppuccin-frappe.h"
+static const char *colors[][3] = {	
+/*  name               		fg         		bg         		border   		*/
+	[SchemeNorm] 		= { col_white, 		col_crust,		col_crust		}, // for windows that you haven't selected
+	[SchemeSel]  		= { col_crust, 		col_white,		col_white  		}, // when you select a window or tag
+};
 
 /* tagging */
 static const char *tags[] = { "󰈹", "󰆍", "󰨞", "󱔗", "󰝰", "󰊌" }; 
@@ -59,6 +64,7 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,		        XK_q,      killclient,     {0} },
 	/* quit dwm cleanly */
 	{ MODKEY|ShiftMask,             XK_c,      quit,           {0} },
+	
 	/* focus on next/previous window in current tag */
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
@@ -70,6 +76,7 @@ static Key keys[] = {
 	/* increase/decrease master area size */
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
+	
 	/* view all windows with any tag */
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
 	/* apply all tags to focused window */
@@ -84,6 +91,7 @@ static Key keys[] = {
 	TAGKEYS(                     	XK_7,                      6)
 	/* switch between workspaces */
 	{ MODKEY,                    	XK_Tab,    view,           {0} }, 
+	
 	/* set layouts (tiling/floating/monocle) */
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
