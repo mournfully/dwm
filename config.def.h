@@ -17,6 +17,7 @@ static const char *colors[][3] = {
 
 /* tagging */
 static const char *tags[] = { "󰈹", "󰆍", "󰨞", "󱔗", "󰝰", "󰊌" }; 
+#include "configs/tags-scheme.h"
 
 /* rules */
 static const Rule rules[] = {

@@ -26,7 +26,7 @@ index a96f33c..24b1eeb 100644
  static const char broken[] = "broken";
 -static char stext[256];
 /* this array of characters holds the status text 
- * increase capacity from 256 -> 1024 to make space for formatting */
+ * increase capacity to 1024 to make space for formatting */
 +static char stext[1024]; 
  static int screen;
  static int sw, sh;           /* X display screen geometry width, height */
