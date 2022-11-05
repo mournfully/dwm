@@ -81,7 +81,7 @@ network_traffic() {
 
   rx=$(update /sys/class/net/[ew]*/statistics/rx_bytes)
   tx=$(update /sys/class/net/[ew]*/statistics/tx_bytes)
-  printf "^c$col_network_download^󰄠 ^c$base^%4sB ^c$base^/ ^c$col_network_upload^󰄝^c$base^ %4sB\\n" "$(numfmt --to=iec $rx)" "$(numfmt --to=iec $tx)"
+  printf "^c$col_network_download^󰄠 ^c$base^%4sB ^c$base^/ ^c$col_network_upload^󰄝^c$base^ %4sB / \\n" "$(numfmt --to=iec $rx)" "$(numfmt --to=iec $tx)"
 }
 #endregion
 
@@ -99,7 +99,7 @@ internet() {
     grep -xq '0x1003' /sys/class/net/w*/flags && icon="^c$col_internet_wifi_down^󰤭" || icon="^c$col_internet_wifi_off^󰀝"
   fi
 
-  printf "^c$base^/ %s ^c$base^%s%%%s%s\n" "$icon" "$val_internet" "$(sed "s/down/[^c$col_internet_ethernet_down^󰈂]/;s/up/[^c$col_internet_ethernet^󰈁]/" /sys/class/net/e*/operstate 2>/dev/null)" "$(sed "s/.*/[^c$col_internet_vpn^󰌆]/" /sys/class/net/tun*/operstate 2>/dev/null)"
+  printf "^c$base^%s ^c$base^%s%%%s%s\n" "$icon" "$val_internet" "$(sed "s/down/[^c$col_internet_ethernet_down^󰈂]/;s/up/[^c$col_internet_ethernet^󰈁]/" /sys/class/net/e*/operstate 2>/dev/null)" "$(sed "s/.*/[^c$col_internet_vpn^󰌆]/" /sys/class/net/tun*/operstate 2>/dev/null)"
 }
 
 volume() {
