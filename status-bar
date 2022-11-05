@@ -168,5 +168,6 @@ timestamp() {
 }
 
 while true; do
-  sleep 1 && xsetroot -name "$(network_traffic) $(internet) $(volume) $(brightness) $(battery) $(timestamp)" 
+  # sleep 1 && xsetroot -name "$(network_traffic) $(internet) $(volume) $(brightness) $(battery) $(timestamp)" 
+  sleep 0.5 && xsetroot -name "$(internet) $(volume) $(battery) $(timestamp)" 
 done

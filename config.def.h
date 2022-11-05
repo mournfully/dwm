@@ -8,16 +8,35 @@ static const int topbar             = 1;        /* 0 means bottom bar */
 static const char *fonts[]          = { "JetBrainsMono Nerd Font:style=regular:size=11", "Material Design Icons Desktop:style=regular:size=14" };
 static const char dmenufont[]       = { "JetBrainsMono Nerd Font:style=regular:size=11" };
 
-#include "configs/catppuccin-frappe.h"
+#include "theme-catppuccin-frappe.h"
 static const char *colors[][3] = {	
-/*  name               		fg         		bg         		border   		*/
-	[SchemeNorm] 		= { col_white, 		col_crust,		col_crust		}, // for windows that you haven't selected
-	[SchemeSel]  		= { col_crust, 		col_white,		col_white  		}, // when you select a window or tag
+/*  name            	fg         		bg         		border   	*/
+	[SchemeNorm] 	= { col_white, 		col_crust,		col_crust	}, /* for windows that you haven't selected */
+	[SchemeSel]  	= { col_crust, 		col_white,		col_white  	}, /* when you select a window or tag */
+	[SchemeUrg]		= { col_crust,		col_white, 		col_red		}, /* for when a window wants your attention */
 };
 
 /* tagging */
 static const char *tags[] = { "󰈹", "󰆍", "󰨞", "󱔗", "󰝰", "󰊌" }; 
-#include "configs/tags-scheme.h"
+static const char *tagnorm[][2] = {
+    /* fg			 bg		   */
+	{  col_red, 	 col_crust },
+	{  col_peach, 	 col_crust },
+	{  col_yellow, 	 col_crust },
+	{  col_green, 	 col_crust },
+	{  col_teal, 	 col_crust },
+	{  col_lavender, col_crust },
+};
+
+static const char *tagsel[][2] = {
+	/* fg			 bg		      */
+	{  col_red, 	 col_surface0 },
+	{  col_peach, 	 col_surface0 },
+	{  col_yellow, 	 col_surface0 },
+	{  col_green, 	 col_surface0 },
+	{  col_teal, 	 col_surface0 },
+	{  col_lavender, col_surface0 },
+};
 
 /* rules */
 static const Rule rules[] = {
