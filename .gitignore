@@ -4,3 +4,9 @@ dwm.o
 patches/unsure/
 drw.o
 util.o
+.dmenu.c.swap
+dmenu
+dmenu.c.orig
+dmenu.o
+stest
+stest.o

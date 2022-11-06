@@ -8,9 +8,9 @@ static const unsigned int gappx     = 4;        /* gaps between windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const int bar_height_padding = 4;        /* vertical padding between bar text and bar box */
-static const int vertpad            = 8;        /* vertical padding between bar and window*/
-static const int sidepad            = 8;        /* horizontal padding between bar and window */
+static const int textvertpad 		= 4;        /* vertical padding between bar text and bar box */
+static const int vertpad            = 4;        /* vertical padding between bar and window*/
+static const int sidepad            = 4;        /* horizontal padding between bar and window */
 static const char *fonts[]          = { "JetBrainsMono Nerd Font:style=regular:size=11", "Material Design Icons Desktop:style=regular:size=14" };
 static const char dmenufont[]       = { "JetBrainsMono Nerd Font:style=regular:size=11" };
 
