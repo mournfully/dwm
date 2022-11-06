@@ -1,13 +1,16 @@
 /* See LICENSE file for copyright and license details. */
 
+#define SESSION_FILE "/tmp/dwm-session"
+
 /* appearance */
 static const unsigned int borderpx  = 3;        /* border pixel of windows */
 static const unsigned int gappx     = 4;        /* gaps between windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const int vertpad            = 8;       /* vertical padding of bar */
-static const int sidepad            = 8;       /* horizontal padding of bar */
+static const int bar_height_padding = 4;        /* vertical padding between bar text and bar box */
+static const int vertpad            = 8;        /* vertical padding between bar and window*/
+static const int sidepad            = 8;        /* horizontal padding between bar and window */
 static const char *fonts[]          = { "JetBrainsMono Nerd Font:style=regular:size=11", "Material Design Icons Desktop:style=regular:size=14" };
 static const char dmenufont[]       = { "JetBrainsMono Nerd Font:style=regular:size=11" };
 
@@ -72,8 +75,8 @@ static const Layout layouts[] = {
 	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
 	{ MODKEY|ShiftMask,             KEY,      tag,            {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
-
 /* commands - regular program bindings now handled in sxhkdrc */
+
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } } /* helper for spawning shell commands in the pre dwm-5.0 fashion */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "/data/dotfiles/dwm/dmenu/dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_crust, "-nf", col_white, "-sb", col_white, "-sf", col_crust, NULL };

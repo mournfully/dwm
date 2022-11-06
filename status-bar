@@ -6,7 +6,7 @@
 
 # load colors:
 col_white=#edeff1
-# col_rosewater=#f2d5cf
+col_rosewater=#f2d5cf
 col_flamingo=#eebebe
 col_pink=#f4b8e4
 col_mauve=#ca9ee6
@@ -59,7 +59,60 @@ col_battery_charging=$col_pink
 col_battery_not_charging=$col_red
 col_battery_unknown=$col_white
 
-col_timestamp=$col_flamingo
+col_timestamp_time=$col_flamingo
+col_timestamp_date=$col_rosewater
+
+weather() {
+  # https://www.youtube.com/watch?v=arLQA52Ieik
+  # https://github.com/LukeSmithxyz/voidrice/blob/master/.local/bin/statusbar/sb-forecast
+  # Print todays weather condition and temperature and an appropriate icon
+  # If we have internet, get a weather report from wttr.in and store it locally, and add a timestamp
+  LOCATION="whitchurch-stouffville" # if not set, use ip address instead
+  FORMAT="%c+%C+%t\n"
+  weatherreport="${XDG_CACHE_HOME:-$HOME/.cache}/weatherreport"
+  getforecast() { 
+      # weather condition textual name and actual temperature 
+      echo "fetching weather data..."
+      curl -sf "wttr.in/$LOCATION?format=$FORMAT" > "$weatherreport" || exit 1 ;
+   
+      echo "replacing with thematically appropriate icon..."
+      case "$(awk 'NR==1 {print $1}' "${weatherreport}" 2>&1)" in
+          "✨") sed -i 's/✨/󰋗/' $weatherreport ;; # Unknown
+          "☁️") sed -i 's/☁️/󰖐/' $weatherreport ;; # Cloudy
+          "🌫") sed -i 's/🌫/󰖑/' $weatherreport ;; # Fog
+          "🌧") sed -i 's/🌧/󰖖/' $weatherreport ;; # HeavyRain
+          "🌧") sed -i 's/🌧/󰖖/' $weatherreport ;; # HeavyShowers
+          "❄️") sed -i 's/❄️/󰼶/' $weatherreport ;; # HeavySnow
+          "❄️") sed -i 's/❄️/󰙿/' $weatherreport ;; # HeavySnowShowers
+          "🌦") sed -i 's/🌦/󰼳/' $weatherreport ;; # LightRain
+          "🌦") sed -i 's/🌦/󰼳/' $weatherreport ;; # LightShowers
+          "🌧") sed -i 's/🌧/󰼵/' $weatherreport ;; # LightSleet
+          "🌧") sed -i 's/🌧/󰼵/' $weatherreport ;; # LightSleetShowers
+          "🌨") sed -i 's/🌨/󰼴/' $weatherreport ;; # LightSnow
+          "🌨") sed -i 's/🌨/󰼴/' $weatherreport ;; # LightSnowShowers
+          "⛅️") sed -i 's/⛅️/󰖕/' $weatherreport ;; # PartlyCloudy
+          "☀️") sed -i 's/☀️/󰖙/' $weatherreport ;; # Sunny
+          "🌩") sed -i 's/🌩/󰖓/' $weatherreport ;; # ThunderyHeavyRain
+          "⛈") sed -i 's/⛈/󰙾/' $weatherreport ;; # ThunderyShowers
+          "⛈") sed -i 's/⛈/󰙾/' $weatherreport ;; # ThunderySnowShowers
+          "☁️") sed -i 's/☁️/󰖐/' $weatherreport ;; # VeryCloudy
+          *) echo "either there was an error or icon was already replaced"
+      esac
+        echo "end of function getforecast()"
+    }
+
+  showweather() {
+      echo "end of function showweather()"
+  }
+
+  echo "getting difference between..."
+  echo $(("$(date +%s)" - "$(stat -c %Y "$weatherreport")")) 
+  
+  echo "if difference exceeds 5 minutes..."
+  
+  getforecast
+  echo "end of function weather()"
+}
 
 network_traffic() {
   # https://github.com/LukeSmithxyz/voidrice/tree/master/.local/bin/statusbar
@@ -79,27 +132,28 @@ network_traffic() {
     printf %d\\n $(( sum - old ))
   }
 
-  rx=$(update /sys/class/net/[ew]*/statistics/rx_bytes)
-  tx=$(update /sys/class/net/[ew]*/statistics/tx_bytes)
-  printf "^c$col_network_download^󰄠 ^c$base^%4sB ^c$base^/ ^c$col_network_upload^󰄝^c$base^ %4sB / \\n" "$(numfmt --to=iec $rx)" "$(numfmt --to=iec $tx)"
+    rx=$(update /sys/class/net/[ewm]*/statistics/rx_bytes)
+    tx=$(update /sys/class/net/[ewm]*/statistics/tx_bytes)
+ printf "^c$col_network_download^󰄠 ^c$base^%4sB ^c$base^/ ^c$col_network_upload^󰄝^c$base^ %4sB" "$(numfmt --to=iec $rx)" "$(numfmt --to=iec $tx)"
 }
-#endregion
 
-internet() {
+network() {
   # https://github.com/LukeSmithxyz/voidrice/tree/master/.local/bin/statusbar
   # Show wifi 󰤨 and percent strength or 󰤭 if none.
   # Show 󰈁 if connected to ethernet or 󰈂 if none.
   # Show 󰌆 if a vpn connection is active
 
-  if grep -xq 'up' /sys/class/net/w*/operstate 2>/dev/null ; then
+  if grep -xq 'up' /sys/class/net/[wm]*/operstate 2>/dev/null ; then
     # measure wifi strength
-	  val_internet="$(awk '/^\s*w/ {print int($3 * 100 / 70)}' /proc/net/wireless)"
+    # https://stackoverflow.com/questions/53416728/iwconfig-proc-net-wireless-does-not-exist
+    # https://unix.stackexchange.com/questions/407775/how-is-proc-net-wireless-a-clone-of-proc-net-dev
+    val_internet="$(awk '/^\s*w/ {print int($3 * 100 / 70)}' /proc/net/wireless)"
     icon="^c$col_internet_wifi^󰤨"
-  elif grep -xq 'down' /sys/class/net/w*/operstate 2>/dev/null ; then
-    grep -xq '0x1003' /sys/class/net/w*/flags && icon="^c$col_internet_wifi_down^󰤭" || icon="^c$col_internet_wifi_off^󰀝"
+  elif grep -xq 'down' /sys/class/net/[wm]*/operstate 2>/dev/null ; then
+    grep -xq '0x1003' /sys/class/net/[wm]*/flags && icon="^c$col_internet_wifi_down^󰤭" || icon="^c$col_internet_wifi_off^󰀝"
   fi
 
-  printf "^c$base^%s ^c$base^%s%%%s%s\n" "$icon" "$val_internet" "$(sed "s/down/[^c$col_internet_ethernet_down^󰈂]/;s/up/[^c$col_internet_ethernet^󰈁]/" /sys/class/net/e*/operstate 2>/dev/null)" "$(sed "s/.*/[^c$col_internet_vpn^󰌆]/" /sys/class/net/tun*/operstate 2>/dev/null)"
+  printf "%s ^c$base^%s%%%s%s" "$icon" "$val_internet" "$(sed "s/down/[^c$col_internet_ethernet_down^󰈂]/;s/up/[^c$col_internet_ethernet^󰈁]/" /sys/class/net/e*/operstate 2>/dev/null)" "$(sed "s/.*/[^c$col_internet_vpn^󰌆]/" /sys/class/net/tun*/operstate 2>/dev/null)"
 }
 
 volume() {
@@ -108,7 +162,7 @@ volume() {
 
   if [[ "$(amixer sget Master | awk -F\"[][]\" '/%/' | head -n1 | awk '{print $6}')" = "[off]" ]]; then
     icon="󰖁"
-    printf "^c$base^| ^c$col_volume_mute^%s" "$icon"
+    printf "^c$col_volume_mute^%s" "$icon"
   else
     # void linux:
     val_volume="$(amixer sget Master | awk -F\"[][]\" '/%/' | head -n1 | awk '{print $4}' | sed 's/[[]//g' | sed 's/[%]]//g')"
@@ -122,16 +176,16 @@ volume() {
     elif [[ "$val_volume" -gt "0" ]]; then 
       icon="^c$col_volume_low^󰕿";
     else 
-      icon="^c$col_volume_unknown^󰸈";
+      icon="^c$col_volume_unknown^󰋗";
     fi
 
-    printf "^c$base^| %s ^c$base^%s%%" "$icon" "$val_volume"
+    printf "^c$base^%s ^c$base^%s%%" "$icon" "$val_volume"
   fi
 } 
 
 brightness() {
   val_brightness=$(echo $(( 100 * $(cat /sys/class/backlight/*/brightness) / $(cat /sys/class/backlight/*/max_brightness))))
-  printf "^c$base^| ^c$col_brightness^󰖨  ^c$base^%s%%" "$val_brightness"    
+  printf "^c$col_brightness^󰖨  ^c$base^%s%%" "$val_brightness"    
 }
 
 battery() {
@@ -149,7 +203,7 @@ battery() {
       "Discharging") status="^c$col_battery_discharging^󰁿" ;;
       "Charging") status="^c$col_battery_charging^󰚥" ;;
       "Not charging") status="^c$col_battery_not_charging^󰅜" ;;
-      "Unknown") status="^c$col_battery_unknown^󱎝" ;;
+      "Unknown") status="^c$col_battery_unknown^󰋗" ;;
       *) exit 1 ;;
     esac
 
@@ -157,17 +211,23 @@ battery() {
     # Will set variable to warn if discharging and low
     [ "$status" = "^c$yellow^󰁿" ] && [ "$val_battery" -le 25 ] && status="^c$col_battery_low_warning^󰂃"
     # Prints the info
-    printf "^c$base^| %s ^c$base^%s%%" "$status" "$val_battery"
+    printf "^c$base^%s ^c$base^%s%%" "$status" "$val_battery"
   done && printf "\\n"
 }
 
 timestamp() {
   # https://devhints.io/datetime
-  # Prints out date in this format: "Sun Sep 25 / 02:25:34"
-  printf "^c$base^| ^c$col_timestamp^󰑐 ^c$base^%s " "$(date '+%a %b %e / %I:%M:%S')"
+  # Prints out time and date 
+  # printf "^c$base^| ^c$col_timestamp^󰑐 ^c$base^%s " "$(date '+%a %b %e / %I:%M:%S')" # Sat Nov 5 / 03:40:30
+  printf "^c$col_timestamp_time^󰃭 ^c$base^%s | ^c$col_timestamp_date^󰥔 ^c$base^%s" "$(date '+%a%e %b %Y')" "$(date '+%I:%M:%S %p %Z')" # Thu 13 May 2021 | 01:01 AM EDT
+}
+
+s() {
+  # Prints out space between modules in xsetroot
+  printf "^c$base^|"
 }
 
 while true; do
   # sleep 1 && xsetroot -name "$(network_traffic) $(internet) $(volume) $(brightness) $(battery) $(timestamp)" 
-  sleep 0.5 && xsetroot -name "$(internet) $(volume) $(battery) $(timestamp)" 
+  sleep 0.5 && xsetroot -name "$(network_traffic) $(s) $(network) $(s) $(battery) $(s) $(volume) $(s) $(timestamp) " 
 done
