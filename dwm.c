@@ -212,7 +212,6 @@ static void setup(void);
 static void seturgent(Client *c, int urg);
 static void showhide(Client *c);
 static void sigchld(int unused);
-static void spawn(const Arg *arg);
 static void tag(const Arg *arg);
 static void tagmon(const Arg *arg);
 static void tile(Monitor *m);
@@ -1269,16 +1268,27 @@ maprequest(XEvent *e)
 void
 monocle(Monitor *m)
 {
-	unsigned int n = 0;
 	Client *c;
 
-	for (c = m->clients; c; c = c->next)
-		if (ISVISIBLE(c))
-			n++;
-	if (n > 0) /* override layout symbol */
-		snprintf(m->ltsymbol, sizeof m->ltsymbol, "[%d]", n);
-	for (c = nexttiled(m->clients); c; c = nexttiled(c->next))
-		resize(c, m->wx, m->wy, m->ww - 2 * c->bw, m->wh - 2 * c->bw, 0);
+	for (c = nexttiled(m->clients); c; c = nexttiled(c->next)) {
+		if (m->gappx == 0) {
+			newx = m->wx - c->bw;
+			newy = m->wy - c->bw;
+			neww = m->ww;
+			newh = m->wh;
+		} else {
+			newx = m->wx + m->gappx - c->bw;
+			newy = m->wy + m->gappx - c->bw;
+			neww = m->ww - 2 * (m->gappx + c->bw);
+			newh = m->wh - 2 * (m->gappx + c->bw);
+		}
+		applysizehints(c, &newx, &newy, &neww, &newh, 0);
+		if (neww < m->ww)
+			newx = m->wx + (m->ww - (neww + 2 * c->bw)) / 2;
+		if (newh < m->wh)
+			newy = m->wy + (m->wh - (newh + 2 * c->bw)) / 2;
+		resize(c, newx, newy, neww, newh, 0);
+	}
 }
 
 void
@@ -1882,20 +1892,6 @@ sigchld(int unused)
 	if (signal(SIGCHLD, sigchld) == SIG_ERR)
 		die("can't install SIGCHLD handler:");
 	while (0 < waitpid(-1, NULL, WNOHANG));
-}
-
-void
-spawn(const Arg *arg)
-{
-	if (arg->v == dmenucmd)
-		dmenumon[0] = '0' + selmon->num;
-	if (fork() == 0) {
-		if (dpy)
-			close(ConnectionNumber(dpy));
-		setsid();
-		execvp(((char **)arg->v)[0], (char **)arg->v);
-		die("dwm: execvp '%s' failed:", ((char **)arg->v)[0]);
-	}
 }
 
 void

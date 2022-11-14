@@ -12,7 +12,6 @@ static const int textvertpad 		= 4;        /* vertical padding between bar text 
 static const int vertpad            = 4;        /* vertical padding between bar and window*/
 static const int sidepad            = 4;        /* horizontal padding between bar and window */
 static const char *fonts[]          = { "JetBrainsMono Nerd Font:style=regular:size=11", "Material Design Icons Desktop:style=regular:size=14" };
-static const char dmenufont[]       = { "JetBrainsMono Nerd Font:style=regular:size=11" };
 
 #include "theme.h"
 static const char *colors[][3] = {	
@@ -77,14 +76,9 @@ static const Layout layouts[] = {
 	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
 /* commands - regular program bindings now handled in sxhkdrc */
 
-#define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } } /* helper for spawning shell commands in the pre dwm-5.0 fashion */
-static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "$HOME/.config/dwm/dmenu/dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_crust, "-nf", col_white, "-sb", col_white, "-sf", col_crust, NULL };
- 
 /* key definitions array */
 static Key keys[] = {
 	/* modifier                     key        function        argument */
-	{ MODKEY,			        	XK_space,  spawn,          {.v = dmenucmd } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	/* kill focused window */
 	{ MODKEY|ShiftMask,		        XK_q,      killclient,     {0} },

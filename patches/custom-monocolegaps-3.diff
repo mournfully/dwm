@@ -1,0 +1,35 @@
+dwm.c - dwm - dynamic window manager - tiling, floating, and more (suckless)
+https://git.kasad.com/dwm/tree/dwm.c
+
+void
+monocle(Monitor *m)
+{
+	unsigned int n = 0;
+	Client *c;
+
+	for (c = m->clients; c; c = c->next)
+		if (ISVISIBLE(c))
+			n++;
+	if (n > 0) /* override layout symbol */
+		snprintf(m->ltsymbol, sizeof m->ltsymbol, "[%d]", n);
+	int newx, newy, neww, newh;
+	for (c = nexttiled(m->clients); c; c = nexttiled(c->next)) {
+		if (m->gappx == 0) {
+			newx = m->wx - c->bw;
+			newy = m->wy - c->bw;
+			neww = m->ww;
+			newh = m->wh;
+		} else {
+			newx = m->wx + m->gappx - c->bw;
+			newy = m->wy + m->gappx - c->bw;
+			neww = m->ww - 2 * (m->gappx + c->bw);
+			newh = m->wh - 2 * (m->gappx + c->bw);
+		}
+		applysizehints(c, &newx, &newy, &neww, &newh, 0);
+		if (neww < m->ww)
+			newx = m->wx + (m->ww - (neww + 2 * c->bw)) / 2;
+		if (newh < m->wh)
+			newy = m->wy + (m->wh - (newh + 2 * c->bw)) / 2;
+		resize(c, newx, newy, neww, newh, 0);
+	}
+}
