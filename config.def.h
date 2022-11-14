@@ -88,7 +88,10 @@ static Key keys[] = {
 	/* focus on next/previous window in current tag */
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
-	/* toggle window between master and stack area */
+    /* rotate window position in current tag */
+    { MODKEY|ShiftMask,             XK_j,      rotatestack,    {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_k,      rotatestack,    {.i = -1 } },
+    /* toggle window between master and stack area */
 	{ MODKEY,                       XK_c,      zoom,           {0} },
 	/* increase/decrease # of windows in master area */
 	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
