@@ -2,6 +2,9 @@ dmenu - dynamic menu
 ====================
 dmenu is an efficient dynamic menu for X.
 
+ - `dmenu`, a binary program.
+ - `dmenu_run`, a wrapper shellscript to pipe `dmenu_path` into `dmenu`.
+ - `dmenu_path`, a shellscript to deliver a list of executables.
 
 Requirements
 ------------

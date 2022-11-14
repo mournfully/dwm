@@ -14,7 +14,7 @@ static const int sidepad            = 4;        /* horizontal padding between ba
 static const char *fonts[]          = { "JetBrainsMono Nerd Font:style=regular:size=11", "Material Design Icons Desktop:style=regular:size=14" };
 static const char dmenufont[]       = { "JetBrainsMono Nerd Font:style=regular:size=11" };
 
-#include "theme-catppuccin-frappe.h"
+#include "theme.h"
 static const char *colors[][3] = {	
 /*  name            	fg         		bg         		border   	*/
 	[SchemeNorm] 	= { col_white, 		col_crust,		col_crust	}, /* for windows that you haven't selected */
@@ -79,7 +79,7 @@ static const Layout layouts[] = {
 
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } } /* helper for spawning shell commands in the pre dwm-5.0 fashion */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "/data/dotfiles/dwm/dmenu/dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_crust, "-nf", col_white, "-sb", col_white, "-sf", col_crust, NULL };
+static const char *dmenucmd[] = { "$HOME/.config/dwm/dmenu/dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_crust, "-nf", col_white, "-sb", col_white, "-sf", col_crust, NULL };
  
 /* key definitions array */
 static Key keys[] = {
