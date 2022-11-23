@@ -13,7 +13,7 @@ static const int vertpad            = 4;        /* vertical padding between bar 
 static const int sidepad            = 4;        /* horizontal padding between bar and window */
 static const char *fonts[]          = { "JetBrainsMono Nerd Font:style=regular:size=11", "Material Design Icons Desktop:style=regular:size=14" };
 
-#include "theme.h"
+#include "colour-scheme.h"
 static const char *colors[][3] = {	
 /*  name            	fg         		bg         		border   	*/
 	[SchemeNorm] 	= { col_white, 		col_crust,		col_crust	}, /* for windows that you haven't selected */
