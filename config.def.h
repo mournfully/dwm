@@ -99,7 +99,11 @@ static Key keys[] = {
 	/* increase/decrease master area size */
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
-	// increase/decrease/reset gap size
+	/* increase/decrease/reset cfact */
+	{ MODKEY|ShiftMask,             XK_h,      setcfact,       {.f = +0.25} },
+	{ MODKEY|ShiftMask,             XK_l,      setcfact,       {.f = -0.25} },
+	{ MODKEY|ShiftMask,             XK_o,      setcfact,       {.f =  0.00} },
+	/* increase/decrease/reset gap size */
 	{ MODKEY,                    	XK_equal,  setgaps,        {.i = -1 } },
 	{ MODKEY,                    	XK_minus,  setgaps,        {.i = +1 } },
 	{ MODKEY|ShiftMask,          	XK_equal,  setgaps,        {.i = 0  } },

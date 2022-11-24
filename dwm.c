@@ -87,6 +87,7 @@ typedef struct Client Client;
 struct Client {
 	char name[256];
 	float mina, maxa;
+	float cfact;
 	int x, y, w, h;
 	int oldx, oldy, oldw, oldh;
 	int basew, baseh, incw, inch, maxw, maxh, minw, minh, hintsvalid;
@@ -210,6 +211,7 @@ static void setfocus(Client *c);
 static void setfullscreen(Client *c, int fullscreen);
 static void setgaps(const Arg *arg);
 static void setlayout(const Arg *arg);
+static void setcfact(const Arg *arg);
 static void setmfact(const Arg *arg);
 static void setup(void);
 static void seturgent(Client *c, int urg);
@@ -1223,6 +1225,7 @@ manage(Window w, XWindowAttributes *wa)
 	c->w = c->oldw = wa->width;
 	c->h = c->oldh = wa->height;
 	c->oldbw = wa->border_width;
+	c->cfact = 1.0;
 
 	updatetitle(c);
 	if (XGetTransientForHint(dpy, w, &trans) && (t = wintoclient(trans))) {
@@ -1803,6 +1806,23 @@ setlayout(const Arg *arg)
 		drawbar(selmon);
 }
 
+void setcfact(const Arg *arg) {
+	float f;
+	Client *c;
+
+	c = selmon->sel;
+
+	if(!arg || !c || !selmon->lt[selmon->sellt]->arrange)
+		return;
+	f = arg->f + c->cfact;
+	if(arg->f == 0.0)
+		f = 1.0;
+	else if(f < 0.25 || f > 4.0)
+		return;
+	c->cfact = f;
+	arrange(selmon);
+}
+
 /* arg > 1.0 will set mfact absolutely */
 void
 setmfact(const Arg *arg)
@@ -1970,109 +1990,42 @@ tagmon(const Arg *arg)
 }
 
 void
-tile(Monitor *m) {
-  unsigned int i, n, h, w, x, y, mw;
-  Client *c;
+tile(Monitor *m) 
+{
+	unsigned int i, n, h, w, x, y, mw;
+	float mfacts = 0, sfacts = 0;
+	Client *c;
 
-  for(n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
-  if(n == 0)
-    return;
+	for(n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++) {
+		if (n < m->nmaster)
+			mfacts += c->cfact;
+		else
+			sfacts += c->cfact;
+	}
+	if(n == 0)
+		return;
 
-  if(n > m->nmaster)
-    mw = m->nmaster ? m->ww * m->mfact : 0;
-  else
-    mw = m->ww - m->gappx;
+	if(n > m->nmaster)
+		mw = m->nmaster ? m->ww * m->mfact : 0;
+	else
+		mw = m->ww - m->gappx;
 
-  for(i = 0, x = y = m->gappx, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++) {
-    if(i < m->nmaster) {
-      w = (mw - x) / (MIN(n, m->nmaster) - i);
-      resize(c, x + m->wx, m->wy + m->gappx, w - (2*c->bw), m->wh - (2*c->bw) - 2*m->gappx, False);
-      if (x + WIDTH(c) + m->gappx < m->ww)
-        x += WIDTH(c) + m->gappx;
-    } else {
-      h = (m->wh - y) / (n - i) - m->gappx;
-      resize(c, x + m->wx, m->wy + y, m->ww - x - (2*c->bw) - m->gappx, h - (2*c->bw), False);
-      if (y + HEIGHT(c) + m->gappx < m->wh)
-        y += HEIGHT(c) + m->gappx;
-    }
-  }
+	for(i = 0, x = y = m->gappx, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++) {
+		if (i < m->nmaster) {
+			w = (mw - x) * (c->cfact / mfacts);
+			resize(c, x + m->wx, m->wy + m->gappx, w - (2*c->bw), m->wh - (2*c->bw) - 2*m->gappx, False);
+		if (x + WIDTH(c) + m->gappx < m->ww)
+			x += WIDTH(c) + m->gappx;
+		mfacts -= c->cfact;		
+		} else {
+			h = (m->wh - y) * (c->cfact / sfacts) - m->gappx;
+			resize(c, x + m->wx, m->wy + y, m->ww - x - (2*c->bw) - m->gappx, h - (2*c->bw), False);
+		if (y + HEIGHT(c) + m->gappx < m->wh)
+			y += HEIGHT(c) + m->gappx;
+		sfacts -= c->cfact;
+		}
+	}
 }
-
-// void
-// tile(Monitor *m)
-// {
-// 	/* mx - calculated master area x position relative to the window area
-// 	 */    
-// 	unsigned int i, n, h, w, mw, mx, ty;
-// 	Client *c;
-
-// 	for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
-// 	if (n == 0)
-// 		return;
-
-// 	if (n > m->nmaster)
-// 		mw = m->nmaster ? m->ww * m->mfact : 0;
-// 	else
-// 		/* mw - calculated monitor width 
-// 		 * mx - calculated master area x position 
-// 		 */
-// 		mw = m->ww - m->gappx;
-
-// 	for (i = mx = ty = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
-// 		if (i < m->nmaster) {
-// 			/* calculate height of client based on remaining space and num of clients
-// 			 * h = (m->wh - my) / (MIN(n, m->nmaster) - i);
-// 			 * h = (1.)			/ ((2.))			  - 3.);
-// 			 	1. m->wh - my | remaining space
-// 				2. (MIN(n, m->nmaster)) | cover exception: nmaster > num of clients
-// 				3. - i | num of remaining clients
-// 			 */
-// 			// w = (mw - mx) / (MIN(n, m->nmaster) - i) - m->gappx;
-// 			w = (mw - mx) / (MIN(n, m->nmaster) - i) - m->gappx;
-
-// 			/* resize and position client properly
-// 			 * resize(c, m->wx, m->wy + my, mw - (2*c->bw), h - (2*c->bw), 0);
-// 			 * resize(c, 1, 	2, 			3,				4,			   0);
-// 				1. m->wx | the window area x position
-// 				2. m->wy + my | the window area y position + master y position
-// 				3. mw - (2*c->bw) | monitor total width - border width
-// 				4. h - (2*c->bw) | calc client height - border edith
-// 			*/
-// 			// resize(c, mx + m->wx, m->wy, w - (2 * c->bw), m->wh - (2 * c->bw), 0);
-// 			// - 1: without +mx has clients in master stack over one anohter
-// 			// - 1: without +m->gappx clients left side isnt movable  
-// 			// - 3: without -m->gappx clients right side isnt movable
-// 			// resize(c, m->wx + mx + m->gappx, m->wy, w - (2*c->bw) - m->gappx, m->wh - (2*c->bw), 0);
-// 			// 	  (c, 		1,		  			2,	  		3,					4,				   0);
-// 			resize(c, mx + m->wx, m->wy, w - (2 * c->bw), m->wh - (2 * c->bw), 0);
-
-// 			/* update master y position after resizing, so we know where to place the next window */
-// 			mx += WIDTH(c) + m->gappx;
-// 		} else {
-// 			// h = (m->wh - ty) / (n - i) - m->gappx;
-// 			// // -2: without +ty clients bottom side wouldne be movable
-// 			// // -3: without -2*m->gappx clients right side isnt movable
-// 			// resize(c, m->wx + mx + m->gappx, m->wy + ty + 2*m->gappx, m->ww - mx - (2*c->bw) - 2*m->gappx, h - (2*c->bw), 0);
-// 			// // 	  (c, 		1,		  			2,	  		3,							4,				   0);
-// 			// ty += HEIGHT(c) + m->gappx;
-// 			h = (m->wh - ty) / (n - i) - m->gappx;
-// 			resize(c, m->wx + mw - m->gappx, m->wy + ty, m->ww - mw - (2*c->bw) - 2*m->gappx, h - (2*c->bw), 0);
-// 			// 	  (c, 	1,		 		 		2,	  				3,								4,				   0);
-// 			ty += HEIGHT(c) + m->gappx;
-// 		}
-// }
-
-/*
-i = i - iterator
-n = n - total num of clients
-h = h - calc client height
-
-w =   - calc client width
-x = my - calc master area y/x pos relative
-
-y = ty - calc stack area y pos relative
-mw = mw - calculated monitor width
-*/
 
 void
 togglebar(const Arg *arg)
