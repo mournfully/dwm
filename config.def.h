@@ -1,6 +1,7 @@
 /* See LICENSE file for copyright and license details. */
 
-#define SESSION_FILE "/tmp/dwm-session"
+/* assumes $XDG_RUNTIME_DIR=/tmp/${USER}-runtime is in ~/.xinitrc */ 
+#define SESSION_FILE "/tmp/local-runtime/dwm-session"
 
 /* appearance */
 static const unsigned int borderpx  = 3;        /* border pixel of windows */
@@ -15,13 +16,13 @@ static const char *fonts[]          = { "JetBrainsMono Nerd Font:style=regular:s
 
 #include "colour-scheme.h"
 static const char *colors[][3] = {	
-/*  name            	fg         		bg         		border   	*/
-	[SchemeNorm] 	= { col_white, 		col_crust,		col_crust	}, /* for windows that you haven't selected */
-	[SchemeSel]  	= { col_crust, 		col_white,		col_white  	}, /* when you select a window or tag */
-	[SchemeUrg]		= { col_crust,		col_white, 		col_red		}, /* for when a window wants your attention */
+/*  name            	fg         		bg         		border   		*/
+	[SchemeNorm] 	= { col_white, 		col_crust,		col_crust		}, /* for windows that you haven't selected */
+	[SchemeSel]  	= { col_crust, 		col_white,		col_sky	}, /* when you select a window or tag */
+	[SchemeUrg]		= { col_crust,		col_white, 		col_red			}, /* for when a window wants your attention */
 };
 
-/* tagging */
+/* tags */
 static const char *tags[] = { "󰈹", "󰆍", "󰨞", "󱔗", "󰝰", "󰊌" }; 
 static const char *tagnorm[][2] = {
     /* fg			 bg		   */
