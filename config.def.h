@@ -84,7 +84,7 @@ static Key keys[] = {
 	/* kill focused window */
 	{ MODKEY|ShiftMask,		        XK_q,      killclient,     {0} },
 	/* quit dwm cleanly */
-	{ MODKEY|ShiftMask,             XK_c,      quit,           {0} },
+	{ MODKEY|ControlMask|ShiftMask, XK_q,      quit,           {1} },
 	
 	/* focus on next/previous window in current tag */
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
