@@ -79,63 +79,63 @@ static const Layout layouts[] = {
 
 /* key definitions array */
 static Key keys[] = {
-	/* modifier                     key        function        argument */
-	{ MODKEY,                       XK_b,      togglebar,      {0} },
+	/* modifier                     key             function        argument */
+	{ MODKEY,                       XK_b,           togglebar,      {0} },
 	/* kill focused window */
-	{ MODKEY|ShiftMask,		        XK_q,      killclient,     {0} },
+	{ MODKEY|ShiftMask,		        XK_q,           killclient,     {0} },
 	/* quit dwm cleanly */
-	{ MODKEY|ControlMask|ShiftMask, XK_q,      quit,           {1} },
+	{ MODKEY|ControlMask|ShiftMask, XK_q,           quit,           {1} },
 	
 	/* focus on next/previous window in current tag */
-	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
-	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
+	{ MODKEY,                       XK_j,           focusstack,     {.i = +1 } },
+	{ MODKEY,                       XK_k,           focusstack,     {.i = -1 } },
     /* rotate window position in current tag */
-    { MODKEY|ShiftMask,             XK_j,      rotatestack,    {.i = +1 } },
-	{ MODKEY|ShiftMask,             XK_k,      rotatestack,    {.i = -1 } },
+    { MODKEY|ShiftMask,             XK_j,           rotatestack,    {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_k,           rotatestack,    {.i = -1 } },
     /* toggle window between master and stack area */
-	{ MODKEY,                       XK_c,      zoom,           {0} },
+	{ MODKEY,                       XK_c,           zoom,           {0} },
 	/* increase/decrease # of windows in master area */
-	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
-	{ MODKEY,                       XK_d,      incnmaster,     {.i = -1 } },
+	{ MODKEY,                       XK_i,           incnmaster,     {.i = +1 } },
+	{ MODKEY,                       XK_d,           incnmaster,     {.i = -1 } },
 	/* increase/decrease master area size */
-	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
-	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
+	{ MODKEY,                       XK_h,           setmfact,       {.f = -0.05} },
+	{ MODKEY,                       XK_l,           setmfact,       {.f = +0.05} },
 	/* increase/decrease/reset cfact */
-	{ MODKEY|ShiftMask,             XK_h,      setcfact,       {.f = +0.25} },
-	{ MODKEY|ShiftMask,             XK_l,      setcfact,       {.f = -0.25} },
-	{ MODKEY|ShiftMask,             XK_o,      setcfact,       {.f =  0.00} },
+	{ MODKEY|ShiftMask,             XK_h,           setcfact,       {.f = +0.25} },
+	{ MODKEY|ShiftMask,             XK_l,           setcfact,       {.f = -0.25} },
+	{ MODKEY|ShiftMask,             XK_semicolon,   setcfact,       {.f =  0.00} },
 	/* increase/decrease/reset gap size */
-	{ MODKEY,                    	XK_equal,  setgaps,        {.i = -1 } },
-	{ MODKEY,                    	XK_minus,  setgaps,        {.i = +1 } },
-	{ MODKEY|ShiftMask,          	XK_equal,  setgaps,        {.i = 0  } },
+	{ MODKEY,                    	XK_equal,       setgaps,        {.i = -1 } },
+	{ MODKEY,                    	XK_minus,       setgaps,        {.i = +1 } },
+	{ MODKEY|ShiftMask,          	XK_equal,       setgaps,        {.i = 0  } },
 
 	/* view all windows with any tag */
-	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
+	{ MODKEY,                       XK_0,           view,           {.ui = ~0 } },
 	/* apply all tags to focused window */
-	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
+	{ MODKEY|ShiftMask,             XK_0,           tag,            {.ui = ~0 } },
 	/* view all windows with nth tag */
-	TAGKEYS(                        XK_1,                      0)
-	TAGKEYS(                        XK_2,                      1)
-	TAGKEYS(                        XK_3,                      2)
-	TAGKEYS(                        XK_4,                      3)
-	TAGKEYS(                        XK_5,                      4)
-	TAGKEYS(                        XK_6,                      5)
-	TAGKEYS(                     	XK_7,                      6)
+	TAGKEYS(                        XK_1,           0)
+	TAGKEYS(                        XK_2,           1)
+	TAGKEYS(                        XK_3,           2)
+	TAGKEYS(                        XK_4,           3)
+	TAGKEYS(                        XK_5,           4)
+	TAGKEYS(                        XK_6,           5)
+	TAGKEYS(                     	XK_7,           6)
 	/* switch between workspaces */
-	{ MODKEY,                    	XK_Tab,    view,           {0} }, 
+	{ MODKEY,                    	XK_Tab,         view,           {0} }, 
 	
 	/* set layouts (tiling/floating/monocle) */
-	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
-	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
-	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
+	{ MODKEY,                       XK_t,           setlayout,      {.v = &layouts[0]} },
+	{ MODKEY,                       XK_f,           setlayout,      {.v = &layouts[1]} },
+	{ MODKEY,                       XK_m,           setlayout,      {.v = &layouts[2]} },
 	/* toggle floating/tiling mode for window */
-	{ MODKEY|ShiftMask,             XK_f,      togglefloating, {0} },
+	{ MODKEY|ShiftMask,             XK_f,           togglefloating, {0} },
 	/* switch focus between monitors */
-	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
-	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
+	{ MODKEY,                       XK_comma,       focusmon,       {.i = -1 } },
+	{ MODKEY,                       XK_period,      focusmon,       {.i = +1 } },
 	/* move windows between monitors */
-	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
-	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_comma,       tagmon,         {.i = -1 } },
+	{ MODKEY|ShiftMask,             XK_period,      tagmon,         {.i = +1 } },
 };
 
 /* mouse button definitions */
